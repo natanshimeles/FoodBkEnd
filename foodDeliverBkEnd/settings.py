@@ -130,7 +130,7 @@ ASGI_APPLICATION = 'foodDeliverBkEnd.asgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'celavieburger',
+        'NAME': 'celavieburger2',
         'USER': 'celavieburgeruser',
         'PASSWORD': '1234',
         'HOST': 'localhost',
