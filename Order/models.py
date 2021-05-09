@@ -2,7 +2,7 @@ from django.db import models
 from UserManagement.models import User,Restaurant
 from django.core.files.storage import FileSystemStorage
 
-fs = FileSystemStorage(location='/home/natan/myproject/media')
+fs = FileSystemStorage(location='/home/natan/myproject/medi')
 class File(models.Model):
     file = models.FileField(storage=fs)
 class FoodCategory(models.Model):
