@@ -35,6 +35,5 @@ urlpatterns = [
 
 
 urlpatterns = urlpatterns + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-urlpatterns = urlpatterns + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
-urlpatterns.append(url(r'^celavieadmin.*', TemplateView.as_view(template_name="admin.html"), name="admin_site"))
+urlpatterns.append(url(r'^celavieadmin/.*', TemplateView.as_view(template_name="admin.html"), name="admin_site"))
 urlpatterns.append(url(r'^.*', TemplateView.as_view(template_name="index.html"), name="home"))
