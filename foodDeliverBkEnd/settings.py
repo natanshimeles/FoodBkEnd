@@ -25,7 +25,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'm)ahe=%5w9ofm66e4h(*5bzcmmyl407iqf%l#^b^c6&4_aivcl'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['64.227.109.182','http://127.0.0.1:8000','127.0.0.1','http://celavieburger.com/','www.celavieburger.com','celavieburger.com','https://celavieburger.com/',]
 
