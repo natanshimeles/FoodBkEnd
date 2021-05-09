@@ -1,5 +1,5 @@
 from UserManagement.views import AllUsersViewSets
-from Order.views import AllOrderViewSets,PhoneNumberViewSets,EmailAddressViewSets, PastDeliveryList,CancelledViewSets,AllReportsViewSets,ReadReportsViewSets,UnReadReportsViewSets,DeliveredOrderViewSets
+from Order.viewsets import AllOrderViewSets,PhoneNumberViewSets,EmailAddressViewSets, PastDeliveryList,CancelledViewSets,AllReportsViewSets,ReadReportsViewSets,UnReadReportsViewSets,DeliveredOrderViewSets
 from rest_framework import routers
 
 router = routers.DefaultRouter()
