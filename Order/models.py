@@ -34,6 +34,12 @@ class Food(models.Model):
     added_by = models.ForeignKey(User, on_delete=models.CASCADE, null = True, blank = True)
     picture =models.ImageField(storage=fs, null = True)
     deleted = models.BooleanField(default = False)
+
+
+    def __str__(self):
+        return str(self.name) 
+        
+
 #special offers 
 class SpecialOffer(models.Model):
     name = models.CharField(max_length = 50)
