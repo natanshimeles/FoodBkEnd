@@ -19,7 +19,7 @@ class Restaurant(models.Model):
 
 class User(AbstractUser):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    phoneNo = models.CharField(max_length=20, null=True, blank=True)
+    phoneNo = models.CharField(max_length=20, null=True, blank=True,)
     jobTitle = models.CharField(max_length=50, null=True, blank=True)
     is_supervisor = models.BooleanField(default=False)
     is_transport = models.BooleanField(default=False)
