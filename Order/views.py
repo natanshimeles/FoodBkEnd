@@ -2,9 +2,9 @@ from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework.decorators import api_view,authentication_classes, permission_classes
 from rest_framework import viewsets,permissions,status
-from .serializer import FoodSerializer,OrderSerializer,ReportSerializer,WorkingHourSerializer,EmailAddressSerializer,InitialReportSerializer,PhoneNumberSerializer,NoOrderSerializer, TotalOrderSerializer,FileSerializer,FoodCategorySerializer,DeliverySerializer, OpeningAndClosingTimeSerializer
+from .serializer import FoodSerializer,OrderSerializer,ReportSerializer,WorkingHourSerializer,InitialReportSerializer,NoOrderSerializer, TotalOrderSerializer,FileSerializer,FoodCategorySerializer,DeliverySerializer, OpeningAndClosingTimeSerializer
 from django.core.exceptions import ObjectDoesNotExist
-from .models import Food,TotalOrder,Order,FoodCategory,Delivery, OpeningAndClosing, Report,PhoneNumber,EmailAddress
+from .models import Food,TotalOrder,Order,FoodCategory,Delivery, OpeningAndClosing, Report
 from rest_framework.decorators import parser_classes
 from django.conf import settings                       
 from UserManagement.serializer import  UserSerializer                                                                                                                                
@@ -13,15 +13,13 @@ from twilio.rest import Client
 from django.utils import timezone
 from datetime import timedelta, time,datetime
 from datetime import datetime
-import xlwt
-from django.http import HttpResponse
-from rest_framework.parsers import JSONParser
 
+from rest_framework.parsers import JSONParser
 
 ##create food menu
 @api_view(['POST',])
 def create_food(request):
-    
+    try:
         if request.user.is_supervisor:
             serializer = FoodSerializer(data=request.data)
             if serializer.is_valid():
@@ -34,7 +32,8 @@ def create_food(request):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         return Response(status=status.HTTP_403_FORBIDDEN)        
 
-    
+    except:
+        return Response(status=status.HTTP_400_BAD_REQUEST)
         
 #create order
 @api_view(['POST',])
@@ -44,9 +43,7 @@ def create_order(request):
         if waiting_order.count() > 0:
             return Response("Can't add more than one order in cart",status=status.HTTP_400_BAD_REQUEST)
         order_serializer = OrderSerializer(data = request.data, many = True)
-       
         if order_serializer.is_valid():
-            
             orders = order_serializer.save()
             total_order = TotalOrder(user_id = request.user,)
             total = 0 
@@ -134,7 +131,7 @@ def get_waiting_orders(request):
 @permission_classes([])
 def get_food(request):
     try:
-        food = Food.objects.filter(deleted = False).order_by('type_of_food')
+        food = Food.objects.filter(is_active = True).order_by('type_of_food')
         serializer = FoodSerializer(food, many = True)
         return Response(serializer.data,status=status.HTTP_200_OK)
     except:
@@ -162,6 +159,20 @@ def get_order(request):
             return Response(status=status.HTTP_403_FORBIDDEN)
     except:
         return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+class AllOrderViewSets(viewsets.ModelViewSet):
+    #automatically contains list, create reterive, update, partial_update, destroy 
+    queryset = TotalOrder.objects.all()
+    serializer_class = TotalOrderSerializer
+    #filter_backends = (filters.DjangoFilterBackend,)
+    #filterset_fields = ('driver_name', 'driver_no','customer_name','contrat_no','car__plateNumber')
+    #filterset_class = AllUserFilter
+# @api_view(['GET',])
+# def get_single_order(request,id):
+#     order = TotalOrder.objects.get(id = id)
+#     order_serializer = TotalOrderSerializer(order)
+#     return  Response(order_serializer.data,status=status.HTTP_200_OK)
 
 @api_view(['GET',])
 def get_new_order_for_supervisor(request):
@@ -334,7 +345,7 @@ def createFoodCategory(request):
 @api_view(['GET',])
 def getFoodCategory(request):
     try:
-        category = FoodCategory.objects.filter(deleted = False)
+        category = FoodCategory.objects.all()
         category_serializer = FoodCategorySerializer(category,many =True)
         return  Response(category_serializer.data, status=status.HTTP_200_OK)
     except:
@@ -441,7 +452,7 @@ def getFoodInCart(request):
         if waiting_order.count() > 0:
             order = TotalOrderSerializer(waiting_order[0])
             return  Response(order.data,status=status.HTTP_200_OK)
-        return  Response(status=status.HTTP_404_NOT_FOUND)
+        return  Response(status=status.HTTP_400_BAD_REQUEST)
     except:
         return Response(status =status.HTTP_400_BAD_REQUEST)
     
