@@ -178,7 +178,7 @@ class AllOrderViewSets(viewsets.ModelViewSet):
 def get_new_order_for_supervisor(request):
     try:
         if request.user.is_supervisor:
-            order = TotalOrder.objects.filter(status = "Located")
+            order = TotalOrder.objects.filter(status = "Located").order_by("-time_stamp")
             order_serializer = TotalOrderSerializer(order,many =True)
             return  Response(order_serializer.data,status=status.HTTP_200_OK)
         else:
@@ -239,8 +239,6 @@ def dispatch_order(request,id):
     try:
         if request.user.is_transport:
             past_deliveries = Delivery.objects.filter(assigned_deliverer = request.user).filter(delivered = False)
-            if past_deliveries.count() > 0:
-                return Response("on another job " ,status=status.HTTP_400_BAD_REQUEST)
             order = TotalOrder.objects.get(id = id)
             order.status = 'Dispatched'
             order.save()
